@@ -1,0 +1,24 @@
+Approach to Time.h/Text Message Alerts 
+
+
+-Revise Text_Alert.h to take in Time/Date as parameters
+-Configure NTP server and Time
+
+
+For the IR beam - depending on high/low, we will loop to check interruption in main?
+
+-Retrieve members from timeinfo important for 
+“Critical Safety Event at {HH}:{MM} on {Month}/{Day}/2023” 
+
+
+Calculation for UTC offset regarding Time.h
+UTC offset -6 => -6 * 3600 = -21600
+
+////////////////////////////////////////////////
+IR Loop:
+Check to see if it's interrupted
+
+if (?)
+-use the printLocalTime method
+-then call txt message function to send alert
+///////////////////////////////////////////////
