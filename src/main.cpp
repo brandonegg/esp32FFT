@@ -4,7 +4,9 @@
 #include "wifi_util.h"
 #include "secrets.h"
 #include "text_alerts.h"
+#include <IRremote.h>
 
+IRrecv irrecv(12);
 OLEDManager* oled;
 TextManager* text;
 
@@ -35,8 +37,22 @@ void setup() {
   text = new TextManager();
 
   text->send_triggered_alert();
+
+  Serial.println("Enabling IR receiver");
+  irrecv.enableIRIn();
 }
 
+decode_results results;
+
 void loop() {
-  
+  if (irrecv.decode(&results)) {
+    if (results.decode_type == 0 && results.rawlen > 1) {
+      uint16_t sum = results.rawbuf[0] + results.rawbuf[1];
+      Serial.println(sum);
+      if (results.rawbuf[0] + results.rawbuf[1] == 500) {
+        Serial.println("IR signal detected at 500 Hz");
+      }
+    }
+    irrecv.resume();
+  }
 }
