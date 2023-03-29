@@ -25,6 +25,10 @@ class TextManager {
          * Sends the untriggered alert message to the defined phone number
          */
         void send_untriggered_alert();
+        /**
+         * Push current time to buffer
+         */
+        void retrieve_current_time(char *time_buff, int buff_size);
 
     private:
         Twilio* twilio;

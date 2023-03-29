@@ -1,25 +1,24 @@
 #include "text_alerts.h"
 
-/**
- * Check current temperature data. Return string format
- */
-String get_current_time() {
-    time_t now;
-    struct tm timeinfo;
-    time(&now);
-    localtime_r(&now, &timeinfo);
-
-    char buffer[80];
-    strftime(buffer, 80, "%A, %B %d %Y %H:%M:%S", &timeinfo);
-    String str(buffer);
-    return str;
-}
-
 //revise constructor
 TextManager::TextManager() {
     twilio = new Twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
     Serial.println("TextManager initialized - Twilio connected");
-    bool prev_outside_range = false;
+
+    configTime(-21600, 3600, "pool.ntp.org");
+}
+
+/**
+ * Check current temperature data. Return string format
+ */
+void TextManager::retrieve_current_time(char *time_buff, int buff_size) {
+    struct tm timeinfo;
+    if(!getLocalTime(&timeinfo)){
+        Serial.println("Failed to obtain time");
+        return;
+    }
+
+    strftime(time_buff, buff_size, "%H:%M on %m/%#d/%Y", &timeinfo);
 }
 
 void TextManager::send_text_alert(String msg) {
@@ -31,9 +30,13 @@ void TextManager::send_text_alert(String msg) {
 }
 
 void TextManager::send_triggered_alert() {
-    send_text_alert("Testing triggered alert - " + get_current_time());
+    char time_buff[50];
+    retrieve_current_time(time_buff, 50);
+    send_text_alert(String("Critical Safety Event at ") + String(time_buff));
 }
 
 void TextManager::send_untriggered_alert() {
-    send_text_alert("Testing untriggered alert - " + get_current_time());
+    char time_buff[50];
+    retrieve_current_time(time_buff, 50);
+    send_text_alert(String(time_buff));
 }

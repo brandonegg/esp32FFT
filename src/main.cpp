@@ -19,18 +19,18 @@ void setup() {
 
   IPAddress ip = connect_wifi();
   oled->clear();
+
+  Serial.println("Wifi is connected!");
+  oled->set_display(true);
+  oled->render_text(0,28, "Wifi connected!", u8g2_font_6x13O_tr);
   oled->render_text(0,48, ip.toString(), u8g2_font_6x13B_tf);
   oled->send();
 
   delay(5000);
-  Serial.println("Wifi is connected!");
-  oled->set_display(true);
-  oled->clear();
-  oled->render_text(0,28, "It's connected!", u8g2_font_6x13O_tr);
-  oled->send();
-
-  delay(5000);
   oled->set_display(false);
+
+  // Initialize text manager
+  text = new TextManager();
 
   text->send_triggered_alert();
 }
