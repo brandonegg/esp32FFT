@@ -1,6 +1,9 @@
 #ifndef SECRETS
 #define SECRETS
 
+// CONFIG
+#define USER_PHONE_NUMBER ""
+
 // TWILIO
 #define TWILIO_ACCOUNT_SID ""
 #define TWILIO_AUTH_TOKEN ""

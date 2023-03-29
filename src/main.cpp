@@ -3,11 +3,10 @@
 #include "oled.h"
 #include "wifi_util.h"
 #include "secrets.h"
-#include "time.h"
+#include "text_alerts.h"
 
 OLEDManager* oled;
-
-
+TextManager* text;
 
 void setup() {
   // put your setup code here, to run once:
@@ -24,19 +23,18 @@ void setup() {
   oled->send();
 
   delay(5000);
-  oled->set_display(false);
-}
-
-void loop() {
-  // put your main code here, to run repeatedly:
-  //Todo: Add IR Loop with conditionals to check interruption of beam. 
-  //If interrupted, call text alert function (text_manager -> checkIRbeam())
-
-
-//Temp code that wifi is connected
   Serial.println("Wifi is connected!");
   oled->set_display(true);
   oled->clear();
   oled->render_text(0,28, "It's connected!", u8g2_font_6x13O_tr);
   oled->send();
+
+  delay(5000);
+  oled->set_display(false);
+
+  text->send_triggered_alert();
+}
+
+void loop() {
+  
 }
