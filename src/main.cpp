@@ -27,7 +27,9 @@ void setup() {
   oled->send();
 
   delay(5000);
-  oled->set_display(false);
+  oled->clear();
+  oled->render_text(0,28, "System activated", u8g2_font_6x13B_tf);
+  oled->send();
 
   // Initialize text manager
   text = new TextManager();

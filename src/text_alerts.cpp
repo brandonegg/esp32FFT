@@ -18,7 +18,7 @@ void TextManager::retrieve_current_time(char *time_buff, int buff_size) {
         return;
     }
 
-    strftime(time_buff, buff_size, "%H:%M on %m/%#d/%Y", &timeinfo);
+    strftime(time_buff, buff_size, "%H:%M on %D", &timeinfo);
 }
 
 void TextManager::send_text_alert(String msg) {

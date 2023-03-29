@@ -15,7 +15,7 @@ void setup_other() {
 
 IPAddress connect_wifi() {
     WiFi.disconnect(true);  //disconnect from WiFi to set new WiFi connection
-    WiFi.setHostname("Temperature Box");
+    WiFi.setHostname("Safety Monitory");
     if (strcmp(WIFI_SSID, "eduroam") == 0) {
         Serial.println("Configuring WiFi for eduroam authentication");
         setup_eduroam();
