@@ -1,11 +1,18 @@
 #include "text_alerts.h"
-#include "time.h"
 
+/**
+ * Check current temperature data. Return string format
+ */
+String get_current_time() {
+    time_t now;
+    struct tm timeinfo;
+    time(&now);
+    localtime_r(&now, &timeinfo);
+    Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
+}
 
 //revise constructor
-TextManager::TextManager(TemperatureData* temp_data_in) {
-    temp_data = temp_data_in;
-    phone_data = new PhoneAlertData();
+TextManager::TextManager() {
     twilio = new Twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
     Serial.println("TextManager initialized - Twilio connected");
     bool prev_outside_range = false;
@@ -41,39 +48,10 @@ void TextManager::send_text_alert(String msg) {
     }
 }
 
-//todo method to send text messages containing the date/time
-void TextManager::check_Time() {
-    
+void TextManager::send_triggered_alert() {
 
-    
 }
 
-//Plan to remove this
-void TextManager::check_temp() {
-    float temp = temp_data->get_c();
+void TextManager::send_untriggered_alert() {
 
-    if (phone_data->unit == 'f') {
-        temp = temp_data->get_f();
-    }
-
-    if (temp > phone_data->max_temp || temp < phone_data->min_temp) {
-        if (!prev_outside_range) {
-            Serial.println("sending text");
-            String unit_upper = String(phone_data->unit);
-            unit_upper.toUpperCase();
-
-            send_text_alert("(Temperature = " + String(temp) + unit_upper + ") The temperature probe has fallen outside your threshold");
-            prev_outside_range = true;
-        }
-    } else {
-        prev_outside_range = false;
-    }
-}
-
-/*
- * PHONE ALERT FUNCTIONS
- */
-String* PhoneAlertData::format_json() {
-    String* response = new String("{\"phone_number\":\"" + phone_number + "\",\"min_temp\":" + String(min_temp) + ",\"max_temp\":" + String(max_temp) + ",\"unit\":\""+ unit + "\"}");
-    return response;
 }

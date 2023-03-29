@@ -3,54 +3,32 @@
 #include <Arduino.h>
 #include "secrets.h"
 #include "twilio.hpp"
-
+#include "time.h"
 
 #define TWILIO_FROM_NUMBER "+18885719233"
 
 /**
- * Object for storing twilio phone data, stores time information 
+ * Manage sending text alerts to user
  */
-class PhoneAlertData {
-    public:
-        String hour = "";
-        String minute = "";
-        String month = "";
-        String day = "";
-        //String* format_json();
-};
-//
-//TODO: Revise the text manager class to manage and pass time information
-//
 class TextManager {
     public:
         /**
          * As TemperatureData object is used to determine current temperature and if
          * it falls outside threshold.
          */
-        TextManager(TemperatureData* temp_data_in);
+        TextManager();
         /**
-         * Pass new phone number data to class
+         * Sends the triggered alert message to the defined phone number
          */
-        void update_data(String phone_number, float min_temp, float max_temp, char unit);
+        void send_triggered_alert();
         /**
-         * Check current temperature data. Should be called in main routine loop.
+         * Sends the untriggered alert message to the defined phone number
          */
-        void check_temp();
-        /**
-         * Getter for phone alert data reference
-         */
-        PhoneAlertData* get_data();
+        void send_untriggered_alert();
 
     private:
-        PhoneAlertData* phone_data;
-        TemperatureData* temp_data;
         Twilio* twilio;
         void send_text_alert(String msg);
-        /**
-         * Whether the previously initialized data was outside the set temp range.
-         * Used to determine if new text needs to be sent.
-         */
-        bool prev_outside_range = false;
 };
 
 #endif
