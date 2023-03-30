@@ -9,6 +9,18 @@
 #include <Wire.h>
 #endif
 
+#ifdef HELTEC_WIFI_KIT_32
+#define OLED_CLOCK 15
+#define OLED_DATA 4
+#define OLED_RESET 16
+#endif
+
+#ifdef HELTEC_WIFI_LORA_32_V3
+#define OLED_CLOCK 18
+#define OLED_DATA 17
+#define OLED_RESET 21
+#endif
+
 class OLEDManager {
     public:
         /**
