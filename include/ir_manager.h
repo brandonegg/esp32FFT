@@ -4,8 +4,10 @@
 #include <Arduino.h>
 
 #define ADC_IR_PIN 1 // Pin the IR is plugged into on esp32, must be ADC1 capable
-#define SAMPLE_PERIOD 1000 // Once every 1 seconds (time in uS).
-#define SAMPLE_N 2048 // Must be a power of 2 (FFT_N)
+#define SAMPLE_PERIOD 630 // 1600 Hz Once every 1000 micro seconds.
+// Note: Sample period must be 2 times the target frequency. In our case we are targeting 500Hz
+// so we want a frequency of 1000Hz which is a period of 0.001 seconds (or 1000 micro seconds)
+#define SAMPLE_N 1024 //2048 // Must be a power of 2 (FFT_N)
 
 class IRManager {
     public:
@@ -23,10 +25,8 @@ class IRManager {
 
         /**
          * Samples the current ADC reading
-         * 
-         * @param int64_t curr_time Current time (ms) since esp32 boot sample is being taken
          */
-        void sample(int64_t curr_time);
+        void sample();
 
         /**
          * Returns current buffer index.
@@ -61,13 +61,12 @@ class IRManager {
 
         double frequency = 0;
         double amplitude = 0;
+        // total duration of the sample collection is # samples / sampling frequency
+        //float capture_duration = 3.413; //(float)SAMPLE_N/(float)SAMPLE_PERIOD; //2.048;
+        float capture_duration = (float)SAMPLE_N / (1.0 / ((float)SAMPLE_PERIOD / 1000000.0));
         uint16_t buff_index = 0;
 
-        int64_t buffer_start_time = 0;
-        int64_t buffer_end_time = 0;
-
         double adc_buffer[SAMPLE_N] = { 0 };
-        bool active = false;
 };
 
 #endif

@@ -31,7 +31,7 @@ void timed_adc_sample(void* arg) {
   //Serial.println(ReadVoltage(1),3);
   //Serial.println(analogRead(1));
   //time = &(esp_timer_get_time());
-  ir->sample(esp_timer_get_time());
+  ir->sample();
 }
 
 void init_ir_sampling() {
@@ -76,14 +76,25 @@ void setup() {
 
   // ir Receiver config
   init_ir_sampling();
+  oled->clear();
+  pinMode(46, OUTPUT);
+  digitalWrite(46, 1);
 }
 
 void loop() {
-  Serial.println(ir->get_buffer_index());
-
   if (ir->is_buffer_full()) {
-    Serial.println("Calculated Frequency: " + String(ir->calc_freq()));
-  }
+    double freq = ir->calc_freq();
+    if ((freq > 500) && (freq < 600)) {
+        digitalWrite(46, 1);
+    } else {
+        digitalWrite(46, 0);
+    }
 
-  delay(500);
+    Serial.println("Measured frequency: " + String(freq));
+
+    oled->clear();
+    oled->render_text(0,28, "Frequency:", u8g2_font_6x13B_tf);
+    oled->render_text(0,48, String(freq) + " Hz", u8g2_font_6x13O_tr);
+    oled->send();
+  }
 }
