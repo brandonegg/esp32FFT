@@ -72,29 +72,56 @@ void setup() {
 
   // Initialize text manager
   text = new TextManager();
-  text->send_triggered_alert();
 
   // ir Receiver config
   init_ir_sampling();
   oled->clear();
+
+  // Setup LED pin
   pinMode(46, OUTPUT);
   digitalWrite(46, 1);
+
+  // Prepare frequency display
+  oled->clear();
+  oled->render_text(0,28, "Frequency:", u8g2_font_6x13B_tf);
+}
+
+// # of times the frequency has been computed
+int8_t computed_count = 0;
+// True if the frequency was in the valid range
+bool prev_valid = false;
+
+/**
+ * Determines whether the frequency is valid.
+ */
+void handle_frequency(double freq) {
+  bool valid_freq = (freq > 500) && (freq < 600);
+
+  // Skip the first 5 to make sure it is setup correctly.
+  if (computed_count < 5) {
+    computed_count++;
+    prev_valid = valid_freq;
+    return;
+  }
+  
+  if (valid_freq && !prev_valid) {
+    digitalWrite(46, 1);
+  } else if (!valid_freq && prev_valid) {
+    text->send_triggered_alert();
+    digitalWrite(46, 0);
+  }
+
+  prev_valid = valid_freq;
 }
 
 void loop() {
   if (ir->is_buffer_full()) {
     double freq = ir->calc_freq();
-    if ((freq > 500) && (freq < 600)) {
-        digitalWrite(46, 1);
-    } else {
-        digitalWrite(46, 0);
-    }
+    handle_frequency(freq);
 
     Serial.println("Measured frequency: " + String(freq));
 
-    oled->clear();
-    oled->render_text(0,28, "Frequency:", u8g2_font_6x13B_tf);
-    oled->render_text(0,48, String(freq) + " Hz", u8g2_font_6x13O_tr);
+    oled->display_frequency(freq);
     oled->send();
   }
 }

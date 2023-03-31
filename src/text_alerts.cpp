@@ -5,6 +5,7 @@ TextManager::TextManager() {
     twilio = new Twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
     Serial.println("TextManager initialized - Twilio connected");
 
+    // UTC offset -6 => -6 * 3600 = -21600
     configTime(-21600, 3600, "pool.ntp.org");
 }
 

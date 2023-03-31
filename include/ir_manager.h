@@ -4,10 +4,10 @@
 #include <Arduino.h>
 
 #define ADC_IR_PIN 1 // Pin the IR is plugged into on esp32, must be ADC1 capable
-#define SAMPLE_PERIOD 630 // 1600 Hz Once every 1000 micro seconds.
+#define SAMPLE_PERIOD 500 //2000 Hz Once every 1000 micro seconds.
 // Note: Sample period must be 2 times the target frequency. In our case we are targeting 500Hz
 // so we want a frequency of 1000Hz which is a period of 0.001 seconds (or 1000 micro seconds)
-#define SAMPLE_N 1024 //2048 // Must be a power of 2 (FFT_N)
+#define SAMPLE_N 256 //2048 // Must be a power of 2 (FFT_N)
 
 class IRManager {
     public:

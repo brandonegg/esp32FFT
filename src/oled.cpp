@@ -26,6 +26,19 @@ void OLEDManager::render_text(int x, int y, String msg, const uint8_t* font) {
   u8g2->drawStr(x, y, msg.c_str());	// write something to the internal memory
 }
 
+void OLEDManager::display_frequency(double freq) {
+  if (!display_on) {
+    return;
+  }
+
+  String row2 = String(freq) + " Hz";
+  u8g2->setFontMode(0); // Not transparent;
+  u8g2->setFont(u8g2_font_chargen_92_mf);
+  u8g2->setCursor(0, 48);
+  u8g2->print(row2.c_str());
+  send();
+}
+
 void OLEDManager::clear() {
   u8g2->clearDisplay();
 }

@@ -47,6 +47,10 @@ class OLEDManager {
          * Returns true is display is on
          */
         bool is_display_on();
+        /**
+         * Efficient displaying frequency
+         */
+        void display_frequency(double freq);
 
     private:
         bool display_on = false;
