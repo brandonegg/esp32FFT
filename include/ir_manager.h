@@ -38,7 +38,12 @@ class IRManager {
          */
         bool is_buffer_full();
 
-        void calc_buffer();
+        /**
+         * Computes and stores frequency from FFT, computed with buffer.
+         * Should only be called if is_buffer_full() returns true. Resets the buffer
+         * after calc complete.
+         */
+        double calc_freq();
 
     private:
         /**

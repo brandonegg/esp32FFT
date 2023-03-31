@@ -5,8 +5,6 @@
 #include "secrets.h"
 #include "text_alerts.h"
 #include "ir_manager.h"
-#include "FFT.h"
-#include "FFT_signal.h"
 
 OLEDManager* oled;
 TextManager* text;
@@ -33,7 +31,7 @@ void timed_adc_sample(void* arg) {
   //Serial.println(ReadVoltage(1),3);
   //Serial.println(analogRead(1));
   //time = &(esp_timer_get_time());
-  ir->sample(0);
+  ir->sample(esp_timer_get_time());
 }
 
 void init_ir_sampling() {
@@ -84,7 +82,7 @@ void loop() {
   Serial.println(ir->get_buffer_index());
 
   if (ir->is_buffer_full()) {
-    Serial.println("BUFFER FULL!");
+    Serial.println("Calculated Frequency: " + String(ir->calc_freq()));
   }
 
   delay(500);
