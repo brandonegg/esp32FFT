@@ -50,8 +50,6 @@ class OLEDManager {
 
     private:
         bool display_on = false;
-
-    private:
         U8G2_SSD1306_128X64_NONAME_F_SW_I2C* u8g2;
 };
 
