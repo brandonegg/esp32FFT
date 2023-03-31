@@ -7,7 +7,9 @@
 #include "FFT.h"
 #include "FFT_signal.h"
 
-void do_magic() {
+#define SAMPLE_PERIOD 10 // Once every 1 seconds (time in uS).
+
+void compute_fft() {
   char print_buf[300];
   fft_config_t *real_fft_plan = fft_init(FFT_N, FFT_REAL, FFT_FORWARD, fft_input, fft_output);
 
@@ -51,6 +53,42 @@ void do_magic() {
 
 OLEDManager* oled;
 TextManager* text;
+esp_timer_handle_t timer;
+
+const int analogPin = 1;  // GPIO1 - ADC1
+
+double ReadVoltage(byte pin){
+  double reading = analogRead(pin); // Reference voltage is 3v3 so maximum reading is 3v3 = 4095 in range 0 to 4095
+  if(reading < 1 || reading >= 4095) {
+    //return 0;
+  }
+  return (double)reading * (3.3 / 4095.0);
+  // return -0.000000000009824 * pow(reading,3) + 0.000000016557283 * pow(reading,2) + 0.000854596860691 * reading + 0.065440348345433;
+  //return -0.000000000000016 * pow(reading,4) + 0.000000000118171 * pow(reading,3)- 0.000000301211691 * pow(reading,2)+ 0.001109019271794 * reading + 0.034143524634089;
+}
+
+void timed_adc_sample(void* arg) {
+  Serial.println(ReadVoltage(1),3);
+  Serial.println(analogRead(1));
+  delay(100);
+}
+
+void init_adc_sampling() {
+  Serial.println("Initializing the ADC");
+  pinMode(1, INPUT_PULLUP); // enable input
+  analogReadResolution(12); // set the resolution of the ADC to 12 bits (0-4095)
+
+  Serial.println("Initializing sampling routine");
+
+  esp_timer_create_args_t timer_args = {
+    .callback = &timed_adc_sample,
+    .arg = NULL,
+    .name = "temp readings"
+  };
+
+  esp_timer_create(&timer_args, &timer);
+  esp_timer_start_periodic(timer, TEMPERATURE_POLL_FREQUENCY);
+}
 
 void setup() {
   // put your setup code here, to run once:
@@ -80,10 +118,11 @@ void setup() {
 
   text->send_triggered_alert();
 
-  Serial.println("Starting FFT");
-  do_magic();
+  //compute_fft();
+
+  init_adc_sampling();
 }
 
 void loop() {
-
+  
 }
