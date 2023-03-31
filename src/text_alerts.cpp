@@ -9,9 +9,6 @@ TextManager::TextManager() {
     configTime(-21600, 3600, "pool.ntp.org");
 }
 
-/**
- * Check current temperature data. Return string format
- */
 void TextManager::retrieve_current_time(char *time_buff, int buff_size) {
     struct tm timeinfo;
     if(!getLocalTime(&timeinfo)){

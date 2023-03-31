@@ -60,7 +60,7 @@ class IRManager {
         uint16_t read_adc();
 
         double frequency = 0;
-        double amplitude = 0;
+        double magnitude = 0;
         // total duration of the sample collection is # samples / sampling frequency
         //float capture_duration = 3.413; //(float)SAMPLE_N/(float)SAMPLE_PERIOD; //2.048;
         float capture_duration = (float)SAMPLE_N / (1.0 / ((float)SAMPLE_PERIOD / 1000000.0));

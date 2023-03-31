@@ -16,6 +16,7 @@ esp_timer_handle_t timer;
 
 /**
  * Note: Depends on ir object declared before timer being initialized.
+ * Callback for esp periodic timer.
  */
 void timed_adc_sample(void* arg) {
   ir->sample();

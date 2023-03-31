@@ -1,8 +1,6 @@
 #include "oled.h"
 
 OLEDManager::OLEDManager() {
-  //u8g2 = new U8G2_SSD1306_128X64_NONAME_F_SW_I2C(U8G2_R0, /* clock=*/ 18, /* data=*/ 17, /* reset=*/ 21); //esp32v3
-  //u8g2 = new U8G2_SSD1306_128X64_NONAME_F_SW_I2C(U8G2_R0, /* clock=*/ 15, /* data=*/ 4, /* reset=*/ 16); //esp32
   u8g2 = new U8G2_SSD1306_128X64_NONAME_F_SW_I2C(U8G2_R0, OLED_CLOCK, OLED_DATA, OLED_RESET); //esp32
 
   u8g2->begin();

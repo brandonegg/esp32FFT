@@ -5,7 +5,6 @@ float fft_input[SAMPLE_N];
 float fft_output[SAMPLE_N];
 
 void IRManager::compute_fft() {
-  // Testing:
   float max_magnitude = 0;
   float fundamental_freq = 0;
 
@@ -15,7 +14,6 @@ void IRManager::compute_fft() {
   for (int k = 0 ; k < SAMPLE_N ; k++)
     real_fft_plan->input[k] = (float)adc_buffer[k]; // fft_signal
 
-  long int t1 = micros();
   // Execute transformation
   fft_execute(real_fft_plan);
   
@@ -32,26 +30,12 @@ void IRManager::compute_fft() {
         fundamental_freq = freq;
     }
   }
-  long int t2 = micros();
-  
-  //Serial.println();
-  /*Multiply the magnitude of the DC component with (1/FFT_N) to obtain the DC component*/
-  //sprintf(print_buf,"DC component : %f g\n", (real_fft_plan->output[0])/10000/SAMPLE_N);  // DC is at [0]
-  //Serial.println(print_buf);
 
-  /*Multiply the magnitude at all other frequencies with (2/FFT_N) to obtain the amplitude at that frequency*/
-  //sprintf(print_buf,"Fundamental Freq : %f Hz\t Mag: %f g\n", fundamental_freq, (max_magnitude/10000)*2/SAMPLE_N);
-  //Serial.println(print_buf);
-
-  //Serial.print("Time taken: ");Serial.print((t2-t1)*1.0/1000);Serial.println(" milliseconds!");
-  
+  magnitude = (max_magnitude/10000)*2/SAMPLE_N;
   frequency = fundamental_freq;
+
   // Clean up at the end to free the memory allocated
   fft_destroy(real_fft_plan);
-}
-
-void test(uint64_t start_time, uint64_t end_time) {
-  Serial.println("Start time: " + String(start_time) + " - End time: " + String(end_time));
 }
 
 uint16_t IRManager::read_adc() {
@@ -66,9 +50,7 @@ double IRManager::read_adc_voltage() {
 IRManager::IRManager() {
     Serial.println("Initializing the IR sampler");
 
-    Serial.println("Calculating: " + String(capture_duration));
-
-    pinMode(1, INPUT_PULLUP); // enable input as pullup (not necessary I think?)
+    pinMode(1, INPUT_PULLUP); // enable input as pull-up
     analogReadResolution(12); // set the resolution of the ADC to 12 bits (0-4095)
 
     Serial.println("IR sampling configured!");

@@ -13,8 +13,7 @@
 class TextManager {
     public:
         /**
-         * As TemperatureData object is used to determine current temperature and if
-         * it falls outside threshold.
+         * Manages twilio service
          */
         TextManager();
         /**
@@ -26,7 +25,7 @@ class TextManager {
          */
         void send_untriggered_alert();
         /**
-         * Push current time to buffer
+         * Push current time str to buffer
          */
         void retrieve_current_time(char *time_buff, int buff_size);
 
